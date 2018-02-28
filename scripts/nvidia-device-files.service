@@ -1,0 +1,9 @@
+[Unit]
+Description=Create NVIDIA device files
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/nvidia-device-files
+
+[Install]
+WantedBy=multi-user.target

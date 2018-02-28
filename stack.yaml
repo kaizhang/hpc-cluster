@@ -1,0 +1,8 @@
+resolver: lts-10.7
+
+packages:
+  - '.'
+
+extra-deps:
+  - git: https://github.com/kaizhang/SciFlow.git
+    commit: e68c9b4d24ab766a8e2137e8f4e6f632dd7cc1a9
