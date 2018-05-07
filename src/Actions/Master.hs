@@ -156,7 +156,7 @@ install_extra_tools_master = shelly $ do
         , "vim", "tmux", "zsh", "unzip", "mlocate", "readline-devel"
         , "zlib-devel", "libcurl-devel", "cairo-devel", "pango-devel"
         , "bzip2-devel", "xz-devel", "pcre-devel", "libjpeg-turbo-devel"
-        , "libtiff-devel", "openssl-devel"
+        , "libtiff-devel", "openssl-devel", "python-devel", "sqlite-devel"
         ]
 
 -- | Install NVIDIA utilities and libraries (on master node, shared scross whole cluster)

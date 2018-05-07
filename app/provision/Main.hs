@@ -120,6 +120,7 @@ readMachine fl = do
 main :: IO ()
 main = do
     [interface, fl] <- getArgs
+    -- wwbootstrap `uname -r`
     machines <- readMachine fl
     mapM_ print machines
     mapM_ (provision (T.pack interface)) machines

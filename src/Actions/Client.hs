@@ -96,7 +96,8 @@ install_extra_tools_client chroot = shelly $ do
 
 install_extra_tools_nas :: FilePath -> IO FilePath
 install_extra_tools_nas chroot = shelly $ do
-    run_ "yum" [ "-y", "--installroot=" <> T.pack chroot, "install", "parted"]
+    run_ "yum" [ "-y", "--installroot=" <> T.pack chroot, "install"
+        , "parted", "xfsdump", "xfsprogs"]
     return chroot
 
 build_nvidia_driver :: FilePath -> T.Text -> T.Text -> IO ()
