@@ -6,7 +6,7 @@ homepage:            https://github.com/githubuser/wangcluster#readme
 license:             BSD3
 license-file:        LICENSE
 author:              Kai Zhang
-maintainer:          example@example.com
+maintainer:          kai@kzhang.org
 copyright:           2018 (c) Kai Zhang
 category:            Web
 build-type:          Simple
@@ -33,7 +33,7 @@ library
       base
     , aeson
     , data-default
-    , SciFlow
+    , SciFlow >= 0.6.2
     , shelly
     , mtl
     , lens

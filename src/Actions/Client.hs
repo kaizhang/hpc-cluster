@@ -102,8 +102,10 @@ install_extra_tools_nas chroot = shelly $ do
 
 build_nvidia_driver :: FilePath -> T.Text -> T.Text -> IO ()
 build_nvidia_driver nvidia_installer kernel output = shelly $ errExit False $
-    cmd (fromText $ T.pack nvidia_installer) "-s" "-K" "--kernel-install-path"
-        output "-k" kernel
+    cmd (fromText $ T.pack nvidia_installer)
+        "--silent"
+        ("--kernel-install-path=" <> output)
+        ("--kernel-name=" <> kernel)
 
 build_client :: FilePath -> IO ()
 build_client chroot' = shelly $ escaping False $ do
