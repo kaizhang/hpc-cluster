@@ -3,22 +3,32 @@
 
 import Control.Monad
 import System.Random
-import Shelly
+import Shelly hiding (FilePath)
+import qualified Shelly as S
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import           Options.Applicative
+import Data.Text.Prettyprint.Doc
 
 data CreateUserOpt = CreateUserOpt
     { username :: T.Text
-    , host     :: T.Text
+    , nas      :: T.Text
     , path     :: T.Text
+    , dry_run  :: Bool
     }
 
 parser :: Parser CreateUserOpt
 parser = CreateUserOpt
-        <$> strArgument (metavar "USERNAME")
-        <*> strArgument (metavar "HOST")
-        <*> strArgument (metavar "PATH")
+        <$> strOption ( long "username"
+                     <> short 'u'
+                     <> metavar "USERNAME" )
+        <*> strOption ( long "nas"
+                     <> short 'n'
+                     <> metavar "NAS" )
+        <*> strOption ( long "path"
+                     <> short 'p'
+                     <> metavar "PATH" )
+        <*> switch ( long "dry-run")
 
 main :: IO ()
 main = execParser opts >>= createUser 
@@ -33,39 +43,55 @@ generatePassword = T.pack <$> replicateM 10 rand
     alphabet = T.pack $ ['A'..'Z'] ++ ['a'..'z'] ++ ['0'..'9']
 
 createUser :: CreateUserOpt -> IO ()
-createUser CreateUserOpt{..} = do
+createUser opt
+    | dry_run opt = createUser' (\a b -> return $ show_command a b)
+        (liftIO . T.putStrLn) opt
+    | otherwise = createUser' run_ return opt
+
+createUser' :: (S.FilePath -> [T.Text] -> Sh a)  -- ^ Function to execute commands
+            -> (a -> Sh ())
+            -> CreateUserOpt
+            -> IO ()
+createUser' exec sh CreateUserOpt{..} = do
     p <- generatePassword
 
     host <- shelly $ do
         -- Add the user without creating home directory
-        run_ "useradd" ["--no-create-home", username]
-        setStdin $ username <> ":" <> p
-        run_ "chpasswd" []
+        exec "useradd" ["--no-create-home", username] >>= sh
+        unless dry_run $ setStdin $ username <> ":" <> p
+        exec "chpasswd" [] >>= sh
 
         -- Creating home directory on the remote server
-        run_ "pdsh" ["-w", host, "mkdir " <> remote_dir]
+        exec "pdsh" ["-w", nas, "mkdir " <> remote_dir] >>= sh
 
         -- Write entry in auto.home
-        appendfile "/etc/auto.home" $ T.intercalate "\t"
+        unless dry_run $ appendfile "/etc/auto.home" $ T.intercalate "\t"
             [ username
             , "-nfsvers=3,hard,intr,async,noatime"
-            , host <> ":" <> path <> "/&" ]
+            , nas <> ":" <> path <> "/&" ]
 
         -- Reload autofs
-        run_ "systemctl" ["reload", "autofs"]
+        exec "systemctl" ["reload", "autofs"] >>= sh
 
         -- Change permission
-        run_ "chown" [username <> ":" <> username, "/home/" <> username]
-        run_ "chmod" ["700", "/home/" <> username]
+        exec "chown" [username <> ":" <> username, "/home/" <> username] >>= sh
+        exec "chmod" ["700", "/home/" <> username] >>= sh
 
         -- Sync
-        run_ "wwsh" ["file", "sync"]
+        exec "wwsh" ["file", "sync"] >>= sh
 
-        run "hostname" []
+        silently $ run "hostname" []
 
-    T.putStrLn "Here is your account:"
-    T.putStrLn $ "Username: " <> username
-    T.putStrLn $ "Password: " <> p
-    T.putStrLn $ "Please use \"ssh " <> username <> "@" <> T.strip host <> "\" to login."
+    putStrLn $ showMessage username p (T.strip host)
   where
     remote_dir = path <> "/" <> username
+
+showMessage :: T.Text -> T.Text -> T.Text -> String
+showMessage u p h = show $ vsep
+    [ "Here is your account:"
+    , ""
+    , indent 4 $ "Username: " <+> pretty u
+    , indent 4 $ "Password: " <+> pretty p
+    , ""
+    , "Please use" <+> dquotes (pretty $ "ssh " <> u <> "@" <> h) <+> "to login."
+    ]

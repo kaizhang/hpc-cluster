@@ -51,6 +51,7 @@ executable createUser
     , shelly
     , text
     , optparse-applicative
+    , prettyprinter
     , random
  default-language:    Haskell2010
 
