@@ -8,5 +8,6 @@ gpu-0-5	gpu	00:25:90:93:ee:cc	192.168.1.7	"slurm.conf,gres.conf,munge.key,nvidia
 gpu-1-0	gpu	0c:c4:7a:df:12:82	192.168.1.1	"slurm.conf,gres.conf,munge.key,nvidia.sh"	2	8	2	128829		gpu:gtx1080:4
 compute-0-0	compute	00:19:b9:e5:d1:d1	192.168.2.1	"slurm.conf,munge.key"	2	2	1	16042		
 compute-0-1	compute	00:19:b9:e5:ba:f3	192.168.2.2	"slurm.conf,munge.key"	2	2	1	16042		
+compute-1-0	compute	0C:C4:7A:74:52:BE	192.168.2.3	"slurm.conf,munge.key"	2	8	2	129091		
 nas-2-0	nas	ac:1f:6b:60:fb:4e	192.168.3.1							
 nas-0-0	nas	00:30:48:C9:D9:52	192.168.3.2							
