@@ -13,7 +13,7 @@ import           Options.Applicative
 data AddMachineOpt = AddMachineOpt
     { _machines :: FilePath
     , _overwrite :: Bool
-    , _include :: [T.Text]
+    , _include :: Maybe [T.Text]
     }
 
 parser :: Parser AddMachineOpt
@@ -21,7 +21,7 @@ parser = AddMachineOpt
     <$> strOption ( long "machines"
                  <> metavar "MACHINES" )
     <*> switch (long "overwrite")
-    <*> (fmap (T.splitOn "," . T.pack) . strOption) (long "include")
+    <*> (optional . fmap (T.splitOn "," . T.pack) . strOption) (long "include")
 
 data Role = Compute
           | GPU
@@ -36,6 +36,7 @@ instance Show Role where
 data Machine = Machine
     { name             :: T.Text
     , role             :: Role
+    , network_interface :: T.Text
     , hardaddr         :: T.Text
     , ipaddr           :: T.Text
     , files            :: [T.Text]
@@ -49,34 +50,37 @@ data Machine = Machine
 
 addMachines :: AddMachineOpt -> IO ()
 addMachines AddMachineOpt{..} = do
-    machines <- filter (\x -> name x `elem` _include) <$> readMachine _machines
-    mapM_ (addMachine "eth0" _overwrite) machines
+    machines <- filter fn <$> readMachine _machines
+    mapM_ (addMachine _overwrite) machines
+  where
+    fn x = case _include of
+        Just m -> name x `elem` m
+        Nothing -> True
 
-
-addMachine :: T.Text     -- ^ Network Interface
-           -> Bool       -- ^ Whether to overwrite existing machines
+addMachine :: Bool       -- ^ Whether to overwrite existing machines
            -> Machine
            -> IO ()
-addMachine eth_provision overwrite machine = do
+addMachine overwrite machine = do
     exitCode <- shelly $ errExit False $ silently $
         run_ "wwsh" ["node", "list", name machine] >> lastExitCode
     when (exitCode == 0 && overwrite) $ do
-        putStrLn $ "Re-provisioning " ++ T.unpack (name machine)
-        shelly $ run_ "wwsh" ["-y", "node", "delete", name machine]
+        putStrLn $ "Removing " ++ T.unpack (name machine)
+        shelly $ silently $ run_ "wwsh" ["-y", "node", "delete", name machine]
     when (exitCode /= 0 || overwrite) $ do
-        kernel <- T.strip <$> shelly (run "uname" ["-r"])
-        shelly $ do
+        kernel <- T.strip <$> shelly (silently $ run "uname" ["-r"])
+        putStrLn $ "Adding " ++ T.unpack (name machine)
+        shelly $ silently $ do
             run_ "wwsh" [ "-y", "node", "new", name machine
                 , "--ipaddr=" `T.append` ipaddr machine
                 , "--hwaddr=" `T.append` hardaddr machine
-                , "-D", eth_provision ]
+                , "-D", network_interface machine ]
             run_ "wwsh" [ "-y", "provision", "set", name machine
                 , "--vnfs=" `T.append` T.pack (show $ role machine)
                 , "--bootstrap=" `T.append` kernel
                 , "--files=" `T.append` T.intercalate "," file ]
 
         when (role machine == Compute || role machine == GPU) $ do
-            shelly $ do
+            shelly $ silently $ do
                 run_ "wwsh" [ "-y", "object", "modify", "-s"
                     , "FILESYSTEMS=\"mountpoint=/tmp:dev=sda1:type=ext4:size=fill\""
                     , name machine ]
@@ -123,16 +127,16 @@ readMachine fl = do
     c <- T.readFile fl
     return $ map f $ tail $ T.lines c
   where
-    f input = Machine f1 (readRole f2) f3 f4
-        (if T.null f5 then [] else map T.strip $ T.splitOn "," f5)
-        (if T.null f6 then Nothing else Just $ read $ T.unpack f6)
+    f input = Machine f1 (readRole f2) f3 f4 f5
+        (if T.null f6 then [] else map T.strip $ T.splitOn "," f6)
         (if T.null f7 then Nothing else Just $ read $ T.unpack f7)
         (if T.null f8 then Nothing else Just $ read $ T.unpack f8)
-        (if T.null f9 then Nothing else Just f9)
+        (if T.null f9 then Nothing else Just $ read $ T.unpack f9)
         (if T.null f10 then Nothing else Just f10)
         (if T.null f11 then Nothing else Just f11)
+        (if T.null f12 then Nothing else Just f12)
       where
-        [f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11] =
+        [f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12] =
             map (T.dropAround (=='\"')) $ T.splitOn "\t" input
         readRole x = case x of
             "nas"     -> NAS

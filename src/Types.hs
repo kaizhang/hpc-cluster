@@ -23,10 +23,13 @@ readAddr :: T.Text -> Addr
 readAddr = Addr
 
 data Config = Config
-    { _image_root_directory  :: FilePath
-    , _host_name             :: T.Text
-    , _host_ip               :: Addr
-    , _host_eth_internal     :: T.Text
+    { _image_root_directory  :: FilePath         -- ^ The directory used to store
+                                                 -- the built images.
+    , _host_name             :: T.Text           -- ^ the name of the server.
+    , _host_ip               :: Addr             -- ^ The INTERNAL IP address of
+                                                 -- the server
+    , _host_eth_internal     :: T.Text           -- ^ The name of the ethernet used
+                                                 -- for INTERNAL networking.
     , _internal_netmask      :: Addr
     , _host_eth_provision    :: T.Text
     , _ntp_server            :: Addr
