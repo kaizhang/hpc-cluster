@@ -21,3 +21,5 @@ compute-1-1	compute	eth0	0c:c4:7a:74:52:f0	192.168.2.12	"slurm.conf,munge.key"	2
 nas-2-0	nas	eth0	ac:1f:6b:60:fb:4e	192.168.3.1							
 nas-0-0	nas	eth0	00:30:48:C9:D9:52	192.168.3.2							
 nas-1-0	nas	eth2	00:1b:21:9a:f6:51	192.168.3.3							
+nas-1-1	nas	eth0	0c:c4:7a:35:07:28	192.168.3.4							
+nas-1-2	nas	eth0	00:25:90:ed:a6:8e	192.168.3.5							
