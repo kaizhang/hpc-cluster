@@ -6,6 +6,7 @@ module Main where
 import           Data.Maybe         (fromMaybe)
 import qualified Data.Text          as T
 import qualified Data.Text.IO       as T
+import Control.Exception
 import           Shelly             hiding (FilePath)
 import           System.IO
 import           Options.Applicative
@@ -63,12 +64,11 @@ addMachine :: Bool       -- ^ Whether to overwrite existing machines
 addMachine overwrite machine = do
     exitCode <- shelly $ errExit False $ silently $
         run_ "wwsh" ["node", "list", name machine] >> lastExitCode
-    when (exitCode == 0 && overwrite) $ do
-        putStrLn $ "Removing " ++ T.unpack (name machine)
-        shelly $ silently $ run_ "wwsh" ["-y", "node", "delete", name machine]
-    when (exitCode /= 0 || overwrite) $ do
+    when (exitCode == 0 && overwrite) $ deleteNode machine
+    handle (\e -> deleteNode machine >> print (e :: SomeException)) $ when (exitCode /= 0 || overwrite) $ do
         kernel <- T.strip <$> shelly (silently $ run "uname" ["-r"])
-        putStrLn $ "Adding " ++ T.unpack (name machine)
+        putStrLn $ "Adding " ++ T.unpack (name machine) ++ ": "
+        print machine
         shelly $ silently $ do
             run_ "wwsh" [ "-y", "node", "new", name machine
                 , "--ipaddr=" `T.append` ipaddr machine
@@ -110,6 +110,9 @@ addMachine overwrite machine = do
                     Nothing -> []
                     Just m -> ["RealMemory=" ++ T.unpack m]
   where
+    deleteNode x = do
+        putStrLn $ "Removing " ++ T.unpack (name x)
+        shelly $ silently $ run_ "wwsh" ["-y", "node", "delete", name x]
     file = files machine ++ [ "dynamic_hosts", "passwd", "group", "shadow"
         , "network", "auto.master", "auto.home", "auto.share", "idmapd.conf"
         , "ohpc.sh" ]
@@ -137,7 +140,7 @@ readMachine fl = do
         (if T.null f12 then Nothing else Just f12)
       where
         [f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12] =
-            map (T.dropAround (=='\"')) $ T.splitOn "\t" input
+            map (T.dropAround (=='\"') . T.strip) $ T.splitOn "\t" input
         readRole x = case x of
             "nas"     -> NAS
             "compute" -> Compute

@@ -1,25 +1,28 @@
-Name	Role	interface	Hard_address	IP_address	Files	CPU(optional)	Core_per_CPU(optional)	Threads_per_Core(optional)	Memory (MB)	Hard_drive(optional)	slurm_gres
-gpu-1-0	gpu	eth0	0c:c4:7a:df:12:82	192.168.1.1	"slurm.conf,gres.conf,munge.key,nvidia.sh"	2	8	2	128000		gpu:gtx1080:4
-gpu-0-0	gpu	eth0	00:25:90:6c:f0:38	192.168.1.2	"slurm.conf,gres.conf,munge.key,nvidia.sh"	2	4	1	64000		gpu:gtx580:4
-gpu-0-1	gpu	eth0	00:25:90:6c:ed:28	192.168.1.3	"slurm.conf,gres.conf,munge.key,nvidia.sh"	2	4	1	64000		"gpu:gtx580:1,gpu:gtx760:3"
-gpu-0-2	gpu	eth0	00:25:90:6c:f0:ea	192.168.1.4	"slurm.conf,gres.conf,munge.key,nvidia.sh"	2	4	1	64000		gpu:gtx580:4
-gpu-0-3	gpu	eth0	00:25:90:6c:f0:b0	192.168.1.5	"slurm.conf,gres.conf,munge.key,nvidia.sh"	2	4	1	64000		gpu:gtx580:4
-gpu-0-4	gpu	eth0	00:25:90:6c:f0:ac	192.168.1.6	"slurm.conf,gres.conf,munge.key,nvidia.sh"	2	4	1	64000		gpu:gtx580:4
-gpu-0-5	gpu	eth0	00:25:90:93:ee:cc	192.168.1.7	"slurm.conf,gres.conf,munge.key,nvidia.sh"	2	4	1	64000		gpu:gtx580:4
-compute-0-0	compute	eth0	00:19:b9:e5:d1:d1	192.168.2.1	"slurm.conf,munge.key"	2	2	1	16000		
-compute-0-1	compute	eth0	00:19:b9:e5:ba:f3	192.168.2.2	"slurm.conf,munge.key"	2	2	1	16000		
-compute-1-0	compute	eth0	0C:C4:7A:74:52:BE	192.168.2.3	"slurm.conf,munge.key"	2	8	2	128000		
-compute-0-2	compute	eth0	00:26:B9:51:C3:8E	192.168.2.4	"slurm.conf,munge.key"	2	4	1	32000		
-compute-0-3	compute	eth0	00:26:B9:51:C3:E8	192.168.2.5	"slurm.conf,munge.key"	2	4	1	16000		
-compute-0-4	compute	eth0	00:26:B9:51:C3:A9	192.168.2.6	"slurm.conf,munge.key"	2	4	1	32000		
-compute-0-5	compute	eth0	00:26:b9:51:c4:50	192.168.2.7	"slurm.conf,munge.key"	2	4	1	16000		
-compute-0-6	compute	eth0	00:26:b9:51:c3:fd	192.168.2.8	"slurm.conf,munge.key"	2	4	1	16000		
-compute-0-7	compute	eth0	84:2b:2b:4d:c5:28	192.168.2.9	"slurm.conf,munge.key"	2	4	1	16000		
-compute-0-8	compute	eth0	84:2b:2b:55:62:4e	192.168.2.10	"slurm.conf,munge.key"	2	4	1	16000		
-compute-0-9	compute	eth0	84:2b:2b:55:63:13	192.168.2.11	"slurm.conf,munge.key"	2	4	1	16000		
-compute-1-1	compute	eth0	0c:c4:7a:74:52:f0	192.168.2.12	"slurm.conf,munge.key"	2	8	2	128000		
-nas-2-0	nas	eth0	ac:1f:6b:60:fb:4e	192.168.3.1							
-nas-0-0	nas	eth0	00:30:48:C9:D9:52	192.168.3.2							
-nas-1-0	nas	eth2	00:1b:21:9a:f6:51	192.168.3.3							
-nas-1-1	nas	eth0	0c:c4:7a:35:07:28	192.168.3.4							
-nas-1-2	nas	eth0	00:25:90:ed:a6:8e	192.168.3.5							
+Name	Role	interface	Hard_address	IP_address	Files	Number of CPU	Core_per_CPU	Threads_per_Core(optional)	Memory (MB)	Hard_drive (TB)	slurm_gres
+gpu-1-0	gpu	eth0	0c:c4:7a:df:12:82	192.168.1.1	slurm.conf,gres.conf,munge.key,nvidia.sh	2	8	2	128000	NA	gpu:gtx1080:4
+gpu-0-0	gpu	eth0	00:25:90:6c:f0:38	192.168.1.2	slurm.conf,gres.conf,munge.key,nvidia.sh	2	4	1	64000	NA	gpu:gtx580:4
+gpu-0-1	gpu	eth0	00:25:90:6c:ed:28	192.168.1.3	slurm.conf,gres.conf,munge.key,nvidia.sh	2	4	1	64000	NA	gpu:gtx580:1,gpu:gtx760:3
+gpu-0-2	gpu	eth0	00:25:90:6c:f0:ea	192.168.1.4	slurm.conf,gres.conf,munge.key,nvidia.sh	2	4	1	64000	NA	gpu:gtx580:4
+gpu-0-3	gpu	eth0	00:25:90:6c:f0:b0	192.168.1.5	slurm.conf,gres.conf,munge.key,nvidia.sh	2	4	1	64000	NA	gpu:gtx580:4
+gpu-0-4	gpu	eth0	00:25:90:6c:f0:ac	192.168.1.6	slurm.conf,gres.conf,munge.key,nvidia.sh	2	4	1	64000	NA	gpu:gtx580:4
+gpu-0-5	gpu	eth0	00:25:90:93:ee:cc	192.168.1.7	slurm.conf,gres.conf,munge.key,nvidia.sh	2	4	1	64000	NA	gpu:gtx580:4
+compute-0-0	compute	eth0	00:19:b9:e5:d1:d1	192.168.2.1	slurm.conf,munge.key	2	2	1	16000	NA	
+compute-0-1	compute	eth0	00:19:b9:e5:ba:f3	192.168.2.2	slurm.conf,munge.key	2	2	1	16000	NA	
+compute-0-2	compute	eth0	00:26:B9:51:C3:8E	192.168.2.4	slurm.conf,munge.key	2	4	1	32000	NA	
+compute-0-3	compute	eth0	00:26:B9:51:C3:E8	192.168.2.5	slurm.conf,munge.key	2	4	1	16000	NA	
+compute-0-4	compute	eth0	00:26:B9:51:C3:A9	192.168.2.6	slurm.conf,munge.key	2	4	1	32000	NA	
+compute-0-5	compute	eth0	00:26:b9:51:c4:50	192.168.2.7	slurm.conf,munge.key	2	4	1	16000	NA	
+compute-0-6	compute	eth0	00:26:b9:51:c3:fd	192.168.2.8	slurm.conf,munge.key	2	4	1	16000	NA	
+compute-0-7	compute	eth0	84:2b:2b:4d:c5:28	192.168.2.9	slurm.conf,munge.key	2	4	1	16000	NA	
+compute-0-8	compute	eth0	84:2b:2b:55:62:4e	192.168.2.10	slurm.conf,munge.key	2	4	1	16000	NA	
+compute-0-9	compute	eth0	84:2b:2b:55:63:13	192.168.2.11	slurm.conf,munge.key	2	4	1	16000	NA	
+compute-0-10	compute	eth0	00:19:b9:e5:d1:75	192.168.2.13	slurm.conf,munge.key	2	4	1	16000	NA	
+compute-0-11	compute	eth0	00:19:b9:e5:c0:82	192.168.2.14	slurm.conf,munge.key	2	4	1	16000	NA	
+compute-1-1	compute	eth0	0c:c4:7a:74:52:f0	192.168.2.12	slurm.conf,munge.key	2	8	2	128000	NA	
+compute-1-0	compute	eth0	0C:C4:7A:74:52:BE	192.168.2.3	slurm.conf,munge.key	2	8	2	128000	NA	
+compute-1-2	compute	eth0	0c:c4:7a:74:52:c9	192.168.2.15	slurm.conf,munge.key	2	8	2	128000	NA	
+nas-2-0	nas	eth0	ac:1f:6b:60:fb:4e	192.168.3.1						146	
+nas-0-0	nas	eth0	00:30:48:C9:D9:52	192.168.3.2						28	
+nas-1-0	nas	eth2	00:1b:21:9a:f6:51	192.168.3.3						129	
+nas-1-1	nas	eth0	0c:c4:7a:35:07:28	192.168.3.4						165	
+nas-1-2	nas	eth0	00:25:90:ed:a6:8e	192.168.3.5						100	
