@@ -90,7 +90,8 @@ install_resource_manager_client chroot' = shelly $ escaping False $ do
 install_extra_tools_client :: FilePath -> IO FilePath
 install_extra_tools_client chroot = shelly $ do
     run_ "yum" [ "-y", "--installroot=" <> T.pack chroot, "install"
-        , "vim", "cairo", "pango", "libtiff", "perl-Env", "tkinker"
+        , "vim", "cairo", "pango", "libtiff", "perl-Env", "tk"
+        , "nettle", "gnutls", "libidn", "openssl"
         ]
     return chroot
 

@@ -18,9 +18,13 @@ compute-0-8	compute	eth0	84:2b:2b:55:62:4e	192.168.2.10	slurm.conf,munge.key	2	4
 compute-0-9	compute	eth0	84:2b:2b:55:63:13	192.168.2.11	slurm.conf,munge.key	2	4	1	16000	NA	
 compute-0-10	compute	eth0	00:19:b9:e5:d1:75	192.168.2.13	slurm.conf,munge.key	2	4	1	16000	NA	
 compute-0-11	compute	eth0	00:19:b9:e5:c0:82	192.168.2.14	slurm.conf,munge.key	2	4	1	16000	NA	
+compute-0-12	compute	eth0	00:19:b9:e5:ba:df	192.168.2.16	slurm.conf,munge.key	2	2	1	16000	NA	
+compute-0-13	compute	eth0	00:19:b9:e5:ba:e4	192.168.2.17	slurm.conf,munge.key	2	2	1	16000	NA	
+compute-0-14	compute	eth0	00:19:b9:e5:ba:ad	192.168.2.18	slurm.conf,munge.key	2	2	1	16000	NA	
+compute-0-15	compute	eth0	00:19:b9:e5:d0:ba	192.168.2.19	slurm.conf,munge.key	2	2	1	16000	NA	
 compute-1-1	compute	eth0	0c:c4:7a:74:52:f0	192.168.2.12	slurm.conf,munge.key	2	8	2	128000	NA	
 compute-1-0	compute	eth0	0C:C4:7A:74:52:BE	192.168.2.3	slurm.conf,munge.key	2	8	2	128000	NA	
-compute-1-2	compute	eth0	0c:c4:7a:74:52:c9	192.168.2.15	slurm.conf,munge.key	2	8	2	128000	NA	
+compute-1-2	compute	eth1	0c:c4:7a:74:52:c9	192.168.2.15	slurm.conf,munge.key	2	8	2	128000	NA	
 nas-2-0	nas	eth0	ac:1f:6b:60:fb:4e	192.168.3.1						146	
 nas-0-0	nas	eth0	00:30:48:C9:D9:52	192.168.3.2						28	
 nas-1-0	nas	eth2	00:1b:21:9a:f6:51	192.168.3.3						129	

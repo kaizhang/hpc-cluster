@@ -6,4 +6,4 @@ _internal_netmask: "255.255.0.0"  # Subnet netmask for internal network
 _host_eth_provision: "eno2" # Provisioning interface for computes
 _ntp_server: "centos.pool.ntp.org" # Local ntp server for time synchronization
 _bos_mirror: "http://vault.centos.org/7.2.1511/os/x86_64/"
-_nvidia_libs_installer: "././NVIDIA-Linux-x86_64-390.87.run"
+_nvidia_libs_installer: "./NVIDIA-Linux-x86_64-390.87.run"
