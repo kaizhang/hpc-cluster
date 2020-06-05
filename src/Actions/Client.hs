@@ -12,14 +12,14 @@ module Actions.Client
     ) where
 
 import qualified Data.ByteString as B
-import           Data.Monoid     ((<>))
+import Control.Monad.IO.Class (MonadIO)
 import qualified Data.Text       as T
 import           Shelly          hiding (FilePath)
 
 import           Types
 import           Utilities
 
-setup_client :: Addr -> FilePath -> IO ()
+setup_client :: MonadIO io => Addr -> FilePath -> io ()
 setup_client sms_ip chroot' = shelly $ print_commands True $ escaping False $ do
     rm_rf $ fromText chroot
 
@@ -51,7 +51,7 @@ setup_client sms_ip chroot' = shelly $ print_commands True $ escaping False $ do
   where
     chroot = T.pack chroot'
 
-install_file_system_client :: Addr -> FilePath -> IO ()
+install_file_system_client :: MonadIO io => Addr -> FilePath -> io ()
 install_file_system_client sms_ip chroot' = shelly $ escaping False $ do
     -- Install autofs
     chrootInstall chroot "autofs"
@@ -64,7 +64,7 @@ install_file_system_client sms_ip chroot' = shelly $ escaping False $ do
   where
     chroot = T.pack chroot'
 
-install_resource_manager_client :: FilePath -> IO ()
+install_resource_manager_client :: MonadIO io => FilePath -> io ()
 install_resource_manager_client chroot' = shelly $ escaping False $ do
     -- Add Slurm client support
     chrootGroupInstall chroot "ohpc-slurm-client"
@@ -87,7 +87,7 @@ install_resource_manager_client chroot' = shelly $ escaping False $ do
   where
     chroot = T.pack chroot'
 
-install_extra_tools_client :: FilePath -> IO FilePath
+install_extra_tools_client :: MonadIO io => FilePath -> io FilePath
 install_extra_tools_client chroot = shelly $ do
     run_ "yum" [ "-y", "--installroot=" <> T.pack chroot, "install"
         , "vim", "cairo", "pango", "libtiff", "perl-Env", "tk"
@@ -95,20 +95,20 @@ install_extra_tools_client chroot = shelly $ do
         ]
     return chroot
 
-install_extra_tools_nas :: FilePath -> IO FilePath
+install_extra_tools_nas :: MonadIO io => FilePath -> io FilePath
 install_extra_tools_nas chroot = shelly $ do
     run_ "yum" [ "-y", "--installroot=" <> T.pack chroot, "install"
         , "parted", "xfsdump", "xfsprogs"]
     return chroot
 
-build_nvidia_driver :: FilePath -> T.Text -> T.Text -> IO ()
+build_nvidia_driver :: MonadIO io => FilePath -> T.Text -> T.Text -> io ()
 build_nvidia_driver nvidia_installer kernel output = shelly $ errExit False $
     cmd (fromText $ T.pack nvidia_installer)
         "--silent"
         ("--kernel-install-path=" <> output)
         ("--kernel-name=" <> kernel)
 
-build_client :: FilePath -> IO ()
+build_client :: MonadIO io => FilePath -> io ()
 build_client chroot' = shelly $ escaping False $ do
     -- Assemble Virtual Node File System (VNFS) image
     cmd "wwvnfs" "-y" "--chroot" chroot

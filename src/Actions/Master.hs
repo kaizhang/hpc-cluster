@@ -12,7 +12,7 @@ module Actions.Master
     ) where
 
 import qualified Data.ByteString as B
-import Data.Monoid ((<>))
+import Control.Monad.IO.Class (MonadIO)
 import qualified Data.Text       as T
 import           Shelly          hiding (FilePath)
 
@@ -20,7 +20,7 @@ import           Files
 import           Types
 import           Utilities
 
-setup_master :: Config -> IO ()
+setup_master :: MonadIO io => Config -> io ()
 setup_master Config{..} =
     shelly $ escaping False $ configuration >> enable_service >>
         config_warewulf >> import_files >> cmd "wwbootstrap" "`uname -r`" >>
@@ -88,7 +88,7 @@ setup_master Config{..} =
         importFile "/etc/group"
         importFile "/etc/shadow"
 
-install_file_system_master :: IO ()
+install_file_system_master :: MonadIO io => io ()
 install_file_system_master = shelly $ escaping False $ do
     -- Install autofs
     install "autofs"
@@ -108,7 +108,7 @@ install_file_system_master = shelly $ escaping False $ do
     importFile "/etc/autofs.conf"
     importFile "/etc/idmapd.conf"
 
-install_resource_manager_master :: T.Text -> IO ()
+install_resource_manager_master :: MonadIO io => T.Text -> io ()
 install_resource_manager_master sms_name = shelly $ escaping False $ do
     -- Add resource management services on master node
     -- yum -y install pbspro-server-ohpc
@@ -132,7 +132,7 @@ install_resource_manager_master sms_name = shelly $ escaping False $ do
     return ()
 
 -- TODO: GCC version is hardcoded
-install_development_tools_master :: IO ()
+install_development_tools_master :: MonadIO io => io ()
 install_development_tools_master = do
     shelly $ escaping False $ do
         install "kernel-devel"
@@ -144,12 +144,12 @@ install_development_tools_master = do
         install "gnu-compilers-ohpc"
         run_ "ln" ["-s", "/opt/ohpc/pub/compiler/gcc/5.4.0/bin/gcc"
             , "/opt/ohpc/pub/compiler/gcc/5.4.0/bin/cc"]
-    B.writeFile "/etc/profile.d/ohpc.sh" ohpc_sh
+    liftIO $ B.writeFile "/etc/profile.d/ohpc.sh" ohpc_sh
     shelly $ escaping False $ importFile "/etc/profile.d/ohpc.sh"
     return ()
 
 
-install_extra_tools_master :: IO ()
+install_extra_tools_master :: MonadIO io => io ()
 install_extra_tools_master = shelly $ do
     run_ "yum"
         [ "-y", "install"
@@ -161,7 +161,7 @@ install_extra_tools_master = shelly $ do
         ]
 
 -- | Install NVIDIA utilities and libraries (on master node, shared scross whole cluster)
-install_nvidia_libs :: T.Text -> IO ()
+install_nvidia_libs :: MonadIO io => T.Text -> io ()
 install_nvidia_libs nvidia_installer = do
     shelly $ do
         appendToPath "/opt/ohpc/pub/compiler/gcc/5.4.0/bin/"
@@ -172,6 +172,6 @@ install_nvidia_libs nvidia_installer = do
             "--utility-prefix=/opt/ohpc/pub/compiler/nvidia/"
             "--documentation-prefix=/opt/ohpc/pub/compiler/nvidia/"
             "--no-kernel-module"
-    B.writeFile "/etc/profile.d/nvidia.sh" nvidia_sh
+    liftIO $ B.writeFile "/etc/profile.d/nvidia.sh" nvidia_sh
     shelly $ escaping False $ importFile "/etc/profile.d/nvidia.sh"
     return ()

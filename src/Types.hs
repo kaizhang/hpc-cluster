@@ -7,14 +7,17 @@ import           Data.Aeson
 import           Data.Default
 import qualified Data.Text    as T
 import           GHC.Generics
+import Data.Binary
 
-newtype Addr = Addr T.Text
+newtype Addr = Addr T.Text deriving (Generic)
 
 instance FromJSON Addr where
     parseJSON = fmap readAddr . parseJSON
 
 instance ToJSON Addr where
     toJSON = toJSON . showAddr
+
+instance Binary Addr
 
 showAddr :: Addr -> T.Text
 showAddr (Addr x) = x
@@ -39,6 +42,7 @@ data Config = Config
 
 instance FromJSON Config
 instance ToJSON Config
+instance Binary Config
 
 instance Default Config where
     def = defaultConfig
