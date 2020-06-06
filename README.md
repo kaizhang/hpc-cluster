@@ -34,6 +34,19 @@ You can also add specific machines using the `--include` argument.
 
 The machine information will also be appended to the file `/etc/slurm/slurm.conf`. But you need to manually assign the computers to different partitions and delete redundant records.
 
+How to perform update
+---------------------
+
+1. First update the frontend and reboot: `yum -y update && reboot`.
+
+2. Rebuild the bootstraping kernel: ``wwbootstrap `uname -r` ``.
+
+3. Rebuild the images
+
+4. Readd the machines using `--overwrite`.
+
+5. Restart the compute nodes.
+
 Configuration files
 -------------------
 
